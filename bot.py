@@ -17,7 +17,6 @@ class Bot:
         """Init the selenium webdriver with the user_id"""
 
         # checking the login status
-        
         if self.login():
             self.driver.get(self.profile_url)
             print("Success")
@@ -50,3 +49,24 @@ class Bot:
             cookies_exists = True
 
         return cookies_exists
+
+    def get_last_question(self):
+        """Gets the last question in the inbox"""
+
+        inbox = "https://ask.fm/account/inbox"
+        self.driver.get(inbox)
+
+        time.sleep(5)
+        questions_wrapper = self.driver.find_elements_by_xpath('//*[@id="contentArea"]/div/div/section/div[2]/div')
+        print("len of questions: ", len(questions_wrapper))
+        for i in range(1,6):
+
+            # question = question.find_element_by_class_name('streamItem_footer')
+            question_header = self.driver.find_element_by_xpath(f'//*[@id="contentArea"]/div/div/section/div[2]/div/article[{i}]')
+            question_inside = question_header.find_element_by_class_name('streamItem_footer')
+            question_url = question_inside.find_element_by_tag_name('a').get_attribute('href')
+            print(f"Question no : {i}",question_url)
+
+    def toggle_shoutouts(self):
+        """Enable and disable Shoutout"""
+        self.driver.find_element_by_class_name('icon-shoutout-pacman').click()
