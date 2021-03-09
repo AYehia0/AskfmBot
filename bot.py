@@ -50,7 +50,7 @@ class Bot:
 
         return cookies_exists
 
-    def get_last_question(self):
+    def get_num_questions(self, question_no=5):
         """Gets the last question in the inbox"""
 
         questions = list()
@@ -61,7 +61,7 @@ class Bot:
         time.sleep(5)
         questions_wrapper = self.driver.find_elements_by_xpath('//*[@id="contentArea"]/div/div/section/div[2]/div')
         print("len of questions: ", len(questions_wrapper))
-        for i in range(1,6):
+        for i in range(1,question_no):
 
             # question = question.find_element_by_class_name('streamItem_footer')
             question_header = self.driver.find_element_by_xpath(f'//*[@id="contentArea"]/div/div/section/div[2]/div/article[{i}]')
@@ -88,6 +88,18 @@ class Bot:
 
         # Sending
         self.driver.find_element_by_class_name('wrap').click()
+
+
+    def answer_all(self):
+        """Answer all fetched questions"""
+        to_answer = self.get_num_questions()
+        
+        for q in to_answer:
+            # checking if questions isn't a threaded on
+            if 'threads' not in q:
+                self.answer_question(q, "This me as a bot, answering your stupid questions :D")
+                time.sleep(3)
+
 
     def toggle_shoutouts(self):
         """Enable and disable Shoutout"""
