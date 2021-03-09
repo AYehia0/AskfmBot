@@ -53,8 +53,10 @@ class Bot:
     def get_last_question(self):
         """Gets the last question in the inbox"""
 
+        questions = list()
         inbox = "https://ask.fm/account/inbox"
         self.driver.get(inbox)
+
 
         time.sleep(5)
         questions_wrapper = self.driver.find_elements_by_xpath('//*[@id="contentArea"]/div/div/section/div[2]/div')
@@ -65,7 +67,27 @@ class Bot:
             question_header = self.driver.find_element_by_xpath(f'//*[@id="contentArea"]/div/div/section/div[2]/div/article[{i}]')
             question_inside = question_header.find_element_by_class_name('streamItem_footer')
             question_url = question_inside.find_element_by_tag_name('a').get_attribute('href')
-            print(f"Question no : {i}",question_url)
+            questions.append(question_url)
+
+        return questions
+
+    def answer_question(self, question_url, message):
+        """Answers a question with some random shit"""
+
+        # opening the link
+        self.driver.get(question_url)
+         
+        # time.sleep(5)
+        text_area = self.driver.find_element_by_id('question_answer_text')
+        
+        # Clearing the area just in case
+        text_area.clear()
+
+        # Sending the message
+        text_area.send_keys(message)
+
+        # Sending
+        self.driver.find_element_by_class_name('wrap').click()
 
     def toggle_shoutouts(self):
         """Enable and disable Shoutout"""
