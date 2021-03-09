@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 import pickle
 import time
 from os import path
+import google_answers
 
 class Bot:
 
@@ -41,13 +42,15 @@ class Bot:
         # it exists : load the cookies
         else:
             # go to google (any website)
-            self.driver.get("https://google.com/")
+            #self.driver.get(self.askfm_url)
 
+            self.driver.get('https://google.com')
+            
             # Load the cookies
             for cookie in pickle.load(open(pickle_name, "rb")): 
                 self.driver.add_cookie(cookie) 
             cookies_exists = True
-
+          
         return cookies_exists
 
     def get_num_questions(self, question_no=5):
@@ -71,20 +74,31 @@ class Bot:
 
         return questions
 
-    def answer_question(self, question_url, message):
+    def answer_question(self, question_url):
         """Answers a question with some random shit"""
+        
+        # Using js to pass text which contains emojis , since send_keys doesn't work
+        JS_ADD_TEXT_TO_INPUT = """
+        var elm = arguments[0], txt = arguments[1];
+        elm.value += txt;
+        elm.dispatchEvent(new Event('change'));
+        """
 
         # opening the link
         self.driver.get(question_url)
-         
-        # time.sleep(5)
-        text_area = self.driver.find_element_by_id('question_answer_text')
         
+        text_area = self.driver.find_element_by_id('question_answer_text')       
+        
+        # the question
+        q_context = self.driver.find_element_by_xpath('/html/body/main/div/div/div[1]').text
+
+        answer = google_answers.get_answer(q_context)
+        
+        print(answer)
         # Clearing the area just in case
         text_area.clear()
 
-        # Sending the message
-        text_area.send_keys(message)
+        self.driver.execute_script(JS_ADD_TEXT_TO_INPUT, text_area, answer)
 
         # Sending
         self.driver.find_element_by_class_name('wrap').click()
@@ -97,9 +111,10 @@ class Bot:
         for q in to_answer:
             # checking if questions isn't a threaded on
             if 'threads' not in q:
-                self.answer_question(q, "This me as a bot, answering your stupid questions :D")
+                self.answer_question(q)
                 time.sleep(3)
 
+    
 
     def toggle_shoutouts(self):
         """Enable and disable Shoutout"""
