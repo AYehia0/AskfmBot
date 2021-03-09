@@ -1,4 +1,6 @@
 ToDo List:
     -Scrape the askfm website
-        * bypass the askfm bot detection aka google captha 
-        
+        * Bypass the askfm bot detection aka google captha [DONE]
+        * Answer Quesitons [DONE]
+        * Delete Quesitons 
+        * Answer in threads
