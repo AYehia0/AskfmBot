@@ -27,7 +27,7 @@ class Bot:
         # checking the login status
         if self.login():
             self.driver.get(self.profile_url)
-            print("Success")
+            print("Login keys were found!")
 
     def login(self):
         """Login to askFm for only the first time and save the User_data in the same working dir"""

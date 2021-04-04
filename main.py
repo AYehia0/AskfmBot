@@ -2,8 +2,12 @@ from bot import Bot
 import os
 import time
 
-user_id = os.environ["ASK_ID"]
+try:
+    
+    user_id = os.environ["ASK_ID"]
 
+except:
+    user_id = input("User Id: ")
 
 b = Bot(user_id)
 
