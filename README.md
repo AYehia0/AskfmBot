@@ -12,6 +12,7 @@ Some Stupid ideas to automate askFM, ended up with failure due to the shitty web
 - BeautifulSoup (for scrapping, idk)
 - Pickle (to store login keys)
 - Google API keys (optional if you want to answer using google search)
+- Tuxi (compile it yourself)
 - Some common sense
 
 ### Installation
